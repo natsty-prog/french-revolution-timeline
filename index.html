@@ -2,120 +2,141 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ציר זמן המהפכה הצרפתית</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-:root{--header-h:56px;--filterbar-h:40px;--minimap-h:60px;--band-h:200px;}
-body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#0d1117;color:#fff;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+body{font-family:Arial,sans-serif;background:#0d1117;color:#fff;overflow:hidden;}
 
-/* ── Header ── */
-#header{height:var(--header-h);background:linear-gradient(90deg,#6b2737 0%,#3d1020 100%);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,.6);}
-#header h1{font-size:1.25em;font-weight:700;white-space:nowrap;}
-#header .subtitle{font-size:.72em;opacity:.75;white-space:nowrap;}
-#controls{display:flex;gap:8px;align-items:center;margin-right:auto;}
-#search{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;color:#fff;font-size:.82em;width:180px;}
-#search:focus{outline:none;background:rgba(255,255,255,.25);}
+#hdr{position:fixed;top:0;left:0;right:0;height:54px;z-index:200;
+  background:linear-gradient(90deg,#7b1d2e,#3d0f1a);
+  display:flex;align-items:center;padding:0 14px;gap:10px;
+  box-shadow:0 2px 10px rgba(0,0,0,.6);}
+#hdr h1{font-size:1.1em;white-space:nowrap;}
+#hdr small{opacity:.7;font-size:.75em;}
+#hdr-r{display:flex;gap:7px;align-items:center;margin-right:auto;}
+#search{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);
+  border-radius:18px;padding:4px 12px;color:#fff;font-size:.8em;width:170px;}
+#search:focus{outline:none;background:rgba(255,255,255,.28);}
 #search::placeholder{color:rgba(255,255,255,.5);}
-.zoom-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;width:26px;height:26px;border-radius:4px;cursor:pointer;font-size:.9em;display:flex;align-items:center;justify-content:center;}
-.zoom-btn:hover{background:rgba(255,255,255,.3);}
-#counter{font-size:.72em;opacity:.65;white-space:nowrap;}
+.zbtn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);
+  color:#fff;width:26px;height:26px;border-radius:4px;cursor:pointer;font-size:1em;
+  display:flex;align-items:center;justify-content:center;}
+.zbtn:hover{background:rgba(255,255,255,.35);}
+#cnt{font-size:.72em;opacity:.65;white-space:nowrap;}
 
-/* ── Filter bar ── */
-#filterbar{height:var(--filterbar-h);background:rgba(0,0,0,.5);border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;padding:0 12px;gap:6px;overflow-x:auto;flex-shrink:0;direction:ltr;}
-#filterbar::-webkit-scrollbar{display:none;}
-.fbtn{padding:3px 12px;border-radius:12px;border:2px solid transparent;cursor:pointer;font-size:.72em;font-weight:600;transition:all .15s;white-space:nowrap;opacity:.55;}
-.fbtn.active{opacity:1;border-color:rgba(255,255,255,.4);}
-.fbtn:hover{opacity:.85;}
+#fbar{position:fixed;top:54px;left:0;right:0;height:38px;z-index:200;
+  background:rgba(0,0,0,.6);border-bottom:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;padding:0 10px;gap:5px;
+  overflow-x:auto;direction:ltr;}
+#fbar::-webkit-scrollbar{height:0;}
+.fb{padding:3px 11px;border-radius:11px;border:1.5px solid rgba(255,255,255,.15);
+  cursor:pointer;font-size:.7em;font-weight:700;color:#fff;
+  opacity:.5;transition:opacity .15s,border-color .15s;white-space:nowrap;}
+.fb.on{opacity:1;border-color:rgba(255,255,255,.5);}
 
-/* ── Main area ── */
-#main{flex:1;overflow:hidden;position:relative;min-height:0;}
-#tl-wrap{position:absolute;inset:0;overflow:auto;cursor:grab;user-select:none;}
-#tl-wrap:active{cursor:grabbing;}
-#tl-wrap::-webkit-scrollbar{width:6px;height:6px;background:rgba(255,255,255,.05);}
-#tl-wrap::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:3px;}
-#tl-inner{position:relative;}
+#tl{position:fixed;top:92px;bottom:58px;left:0;right:0;
+  overflow:auto;background:#0d1117;}
+#tl::-webkit-scrollbar{width:6px;height:6px;background:rgba(255,255,255,.04);}
+#tl::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:3px;}
+#tl-in{position:relative;}
 
-/* ── Era bands ── */
-.band{position:absolute;left:0;display:flex;align-items:center;}
-.band-label{position:sticky;right:0;font-size:.72em;font-weight:700;color:rgba(255,255,255,.85);background:inherit;padding:4px 8px;border-radius:4px;white-space:nowrap;z-index:20;text-shadow:0 1px 3px rgba(0,0,0,.8);writing-mode:horizontal-tb;letter-spacing:.5px;margin-right:8px;flex-shrink:0;}
-.band-axis{position:absolute;top:50%;left:0;height:2px;background:rgba(255,255,255,.2);pointer-events:none;transform:translateY(-50%);}
+.band{position:absolute;left:0;}
+.blabel{position:absolute;top:50%;transform:translateY(-50%);
+  right:6px;font-size:.68em;font-weight:700;color:rgba(255,255,255,.9);
+  background:rgba(0,0,0,.4);padding:2px 6px;border-radius:3px;
+  white-space:nowrap;z-index:5;text-shadow:0 1px 2px rgba(0,0,0,.8);}
+.baxis{position:absolute;top:50%;left:0;height:1px;
+  background:rgba(255,255,255,.15);z-index:1;}
 
-/* ── Year markers ── */
-.yr-mark{position:absolute;top:0;display:flex;flex-direction:column;align-items:center;pointer-events:none;}
-.yr-tick{width:1px;background:rgba(255,255,255,.25);}
-.yr-label{font-size:.62em;color:rgba(255,255,255,.55);margin-top:2px;white-space:nowrap;}
+.ymark{position:absolute;top:0;pointer-events:none;z-index:2;}
+.ytick{width:1px;background:rgba(255,255,255,.15);}
+.ylabel{position:absolute;bottom:-16px;transform:translateX(-50%);
+  font-size:.58em;color:rgba(255,255,255,.45);white-space:nowrap;}
 
-/* ── Event cards ── */
-.ecard{position:absolute;background:#fff;border-radius:7px;padding:7px 9px;cursor:pointer;transition:transform .15s,box-shadow .15s,z-index .01s;box-shadow:0 2px 8px rgba(0,0,0,.35);z-index:10;width:170px;}
-.ecard:hover{transform:scale(1.07) translateY(-2px);z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.5);}
-.ecard.hidden{display:none !important;}
-.ecard-date{font-size:.6em;color:#777;margin-bottom:2px;font-weight:500;}
-.ecard-title{font-size:.76em;font-weight:700;color:#111;line-height:1.35;}
-.ecard-img{width:100%;height:55px;object-fit:cover;border-radius:4px;margin-top:5px;display:block;}
-/* Speech tails */
-.tail-up::after{content:'';position:absolute;bottom:-7px;right:18px;border:7px solid transparent;border-top-color:#fff;border-bottom:0;}
-.tail-down::after{content:'';position:absolute;top:-7px;right:18px;border:7px solid transparent;border-bottom-color:#fff;border-top:0;}
+.ev{position:absolute;background:#fff;border-radius:6px;
+  padding:6px 8px;cursor:pointer;z-index:10;
+  box-shadow:0 2px 7px rgba(0,0,0,.4);width:160px;
+  transition:transform .12s,box-shadow .12s;}
+.ev:hover{transform:scale(1.06) translateY(-2px);z-index:50;
+  box-shadow:0 6px 18px rgba(0,0,0,.5);}
+.ev.hide{display:none !important;}
+.ev-d{font-size:.6em;color:#777;margin-bottom:2px;}
+.ev-t{font-size:.74em;font-weight:700;color:#111;line-height:1.3;}
+.ev-img{width:100%;height:50px;object-fit:cover;
+  border-radius:3px;margin-top:4px;display:block;}
+/* tail */
+.ev.tu::after{content:'';position:absolute;bottom:-7px;right:16px;
+  border:7px solid transparent;border-top:7px solid #fff;border-bottom:0;}
+.ev.td::after{content:'';position:absolute;top:-7px;right:16px;
+  border:7px solid transparent;border-bottom:7px solid #fff;border-top:0;}
 
-/* ── Minimap ── */
-#minimap{height:var(--minimap-h);background:rgba(0,0,0,.75);border-top:1px solid rgba(255,255,255,.15);flex-shrink:0;position:relative;overflow:hidden;}
-#minimap-canvas{width:100%;height:100%;display:block;}
-#minimap-viewport{position:absolute;top:0;height:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.3);pointer-events:none;}
-#minimap-yrs{position:absolute;bottom:4px;left:0;right:0;display:flex;justify-content:space-between;padding:0 8px;}
-.minimap-yr{font-size:.6em;color:rgba(255,255,255,.4);}
+#mm{position:fixed;bottom:0;left:0;right:0;height:58px;z-index:200;
+  background:rgba(0,0,0,.8);border-top:1px solid rgba(255,255,255,.15);}
+#mm canvas{display:block;width:100%;height:42px;}
+#mm-years{display:flex;justify-content:space-between;
+  padding:1px 8px;opacity:.45;font-size:.6em;}
+#mm-vp{position:absolute;top:0;height:42px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.35);
+  pointer-events:none;}
 
-/* ── Modal ── */
-#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9999;align-items:center;justify-content:center;}
-#modal.open{display:flex;}
-#modal-box{background:#fff;color:#111;border-radius:14px;max-width:580px;width:92%;max-height:85vh;overflow-y:auto;direction:rtl;box-shadow:0 20px 60px rgba(0,0,0,.6);}
-#modal-hdr{padding:16px 20px;border-radius:14px 14px 0 0;position:relative;}
-#modal-close{position:absolute;top:12px;left:14px;background:rgba(0,0,0,.2);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:1em;line-height:28px;text-align:center;}
-#modal-close:hover{background:rgba(0,0,0,.4);}
-#modal-date{font-size:.8em;opacity:.9;margin-bottom:3px;font-weight:500;}
-#modal-title{font-size:1.3em;font-weight:700;line-height:1.3;}
-#modal-body{padding:18px 20px;}
-#modal-body img{max-width:100%;border-radius:8px;margin:10px 0;}
-#modal-cap{font-size:.78em;color:#777;font-style:italic;margin-top:4px;}
-#modal-text{font-size:.88em;line-height:1.75;color:#333;margin-top:10px;white-space:pre-wrap;}
-#modal-grp{display:inline-block;font-size:.72em;font-weight:600;border-radius:20px;padding:3px 10px;margin-top:10px;color:#fff;}
+#modal{display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.82);z-index:999;
+  align-items:center;justify-content:center;}
+#modal.on{display:flex;}
+#mbox{background:#fff;color:#111;border-radius:12px;
+  max-width:570px;width:92%;max-height:88vh;overflow-y:auto;direction:rtl;}
+#mhdr{padding:14px 18px;border-radius:12px 12px 0 0;position:relative;}
+#mclose{position:absolute;top:10px;left:12px;background:rgba(0,0,0,.25);
+  border:none;color:#fff;width:27px;height:27px;border-radius:50%;
+  cursor:pointer;font-size:.95em;}
+#mdate{font-size:.78em;opacity:.85;margin-bottom:3px;}
+#mtitle{font-size:1.2em;font-weight:700;line-height:1.3;}
+#mbody{padding:16px 18px;}
+#mbody img{max-width:100%;border-radius:7px;margin:8px 0;}
+#mcap{font-size:.75em;color:#888;font-style:italic;margin-top:3px;}
+#mtext{font-size:.86em;line-height:1.75;color:#333;margin-top:9px;white-space:pre-wrap;}
+#mtag{display:inline-block;font-size:.7em;font-weight:600;
+  border-radius:20px;padding:2px 9px;margin-top:8px;color:#fff;}
 </style>
 </head>
 <body>
-<div id="header">
+
+<div id="hdr">
   <div>
     <h1>🇫🇷 ציר זמן המהפכה הצרפתית</h1>
-    <div class="subtitle">1756 – 1815</div>
+    <small>1756 – 1815</small>
   </div>
-  <div id="controls">
-    <button class="zoom-btn" onclick="zoom(-0.25)" title="התקרב">−</button>
-    <button class="zoom-btn" onclick="zoom(0.25)" title="התרחק">+</button>
-    <input id="search" type="text" placeholder="חפש אירוע..." oninput="applyFilter()">
-    <span id="counter"></span>
+  <div id="hdr-r">
+    <button class="zbtn" onclick="chZoom(-0.2)">−</button>
+    <button class="zbtn" onclick="chZoom(0.2)">+</button>
+    <input id="search" type="text" placeholder="חפש..." oninput="filter()">
+    <span id="cnt"></span>
   </div>
 </div>
-<div id="filterbar">
-  <button class="fbtn active" data-grp="all" onclick="setGrp('all',this)" style="background:#555;color:#fff;">הכל</button>
+
+<div id="fbar">
+  <button class="fb on" data-g="all" onclick="setG('all',this)" style="background:#555">הכל</button>
 </div>
-<div id="main">
-  <div id="tl-wrap"><div id="tl-inner"></div></div>
+
+<div id="tl"><div id="tl-in"></div></div>
+
+<div id="mm">
+  <canvas id="mmc"></canvas>
+  <div id="mm-years"></div>
+  <div id="mm-vp"></div>
 </div>
-<div id="minimap">
-  <canvas id="minimap-canvas"></canvas>
-  <div id="minimap-viewport"></div>
-  <div id="minimap-yrs"></div>
-</div>
+
 <div id="modal">
-  <div id="modal-box">
-    <div id="modal-hdr">
-      <button id="modal-close" onclick="closeModal()">✕</button>
-      <div id="modal-date"></div>
-      <div id="modal-title"></div>
+  <div id="mbox">
+    <div id="mhdr">
+      <button id="mclose" onclick="closeM()">✕</button>
+      <div id="mdate"></div><div id="mtitle"></div>
     </div>
-    <div id="modal-body">
-      <img id="modal-img" src="" alt="" style="display:none;">
-      <div id="modal-cap"></div>
-      <div id="modal-text"></div>
-      <span id="modal-grp"></span>
+    <div id="mbody">
+      <img id="mimg" src="" alt="" style="display:none">
+      <div id="mcap"></div><div id="mtext"></div>
+      <span id="mtag"></span>
     </div>
   </div>
 </div>
@@ -134,242 +155,228 @@ const GORDER=[
   'הקונסולט',
   'הקיסרות'
 ];
-const MIN_Y=1756,MAX_Y=1816;
-let PPY=180,activeGrp='all',searchQ='';
 
-function gc(grp){
-  if(!grp)return{bg:'#555',card:'#eee',name:'כללי'};
-  if(GC[grp])return GC[grp];
-  for(const k in GC){if(grp.startsWith(k.slice(0,8))||k.startsWith(grp.slice(0,8)))return GC[k];}
-  return{bg:'#555',card:'#eee',name:grp.slice(0,15)};
+const MIN_Y=1756, MAX_Y=1816, BH=180, LEFT_PAD=200;
+let PPY=170, activeG='all', sq='';
+
+function col(grp){
+  if(!grp) return {bg:'#555',card:'#eee',name:'כללי'};
+  if(GC[grp]) return GC[grp];
+  for(const k in GC) if(grp.slice(0,8)===k.slice(0,8)) return GC[k];
+  return {bg:'#555',card:'#eee',name:grp.slice(0,14)};
 }
-function xOf(y,mo=0,d=0){return(y-MIN_Y+(mo?((mo-1)/12):0)+(d?(d-1)/365:0))*PPY+220;}
-function totalW(){return(MAX_Y-MIN_Y)*PPY+440;}
-const BAND_H=190,PAD_TOP=20;
+function x(y,mo=0,d=0){
+  return (y-MIN_Y + (mo?(mo-1)/12:0) + (d?(d-1)/365:0)) * PPY + LEFT_PAD;
+}
+function tw(){ return (MAX_Y-MIN_Y)*PPY + LEFT_PAD*2; }
+function th(){ return GORDER.length*BH + 30; }
 
-function buildBands(){
-  const inner=document.getElementById('tl-inner');
-  inner.innerHTML='';
-  const tw=totalW();
-  const totalH=GORDER.length*BAND_H+40;
-  inner.style.width=tw+'px';
-  inner.style.height=totalH+'px';
-  
-  // Axis strip at bottom
-  const axisStrip=document.createElement('div');
-  axisStrip.style.cssText='position:absolute;bottom:0;left:0;width:'+tw+'px;height:40px;background:rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.2);';
-  inner.appendChild(axisStrip);
-  
-  // Year markers
-  const step=PPY>120?1:PPY>60?5:10;
-  for(let y=MIN_Y;y<=MAX_Y;y+=step){
-    const x=xOf(y);
-    const m=document.createElement('div');
-    m.className='yr-mark';
-    m.style.cssText='left:'+x+'px;bottom:0;position:absolute;';
-    const tickH=totalH-40;
-    m.innerHTML='<div class="yr-tick" style="height:'+tickH+'px;"></div><div class="yr-label" style="position:absolute;bottom:-18px;transform:translateX(-50%);color:rgba(255,255,255,.55);">'+y+'</div>';
-    inner.appendChild(m);
-  }
-  
+function render(){
+  const inn = document.getElementById('tl-in');
+  inn.innerHTML = '';
+  const W = tw(), H = th();
+  inn.style.cssText = 'position:relative;width:'+W+'px;height:'+H+'px;';
+
   // Bands
   GORDER.forEach((grp,gi)=>{
-    const col=gc(grp);
-    const top=gi*BAND_H;
-    const band=document.createElement('div');
-    band.className='band';
-    band.style.cssText='top:'+top+'px;height:'+BAND_H+'px;width:'+tw+'px;background:'+col.bg+'dd;border-bottom:1px solid rgba(255,255,255,.12);';
-    // Label
-    const lbl=document.createElement('div');
-    lbl.style.cssText='position:sticky;right:0;top:'+(top+BAND_H/2-14)+'px;z-index:20;background:'+col.bg+';padding:3px 8px;font-size:.72em;font-weight:700;color:#fff;border-radius:0 4px 4px 0;max-width:90px;text-align:right;line-height:1.3;white-space:normal;box-shadow:2px 0 8px rgba(0,0,0,.4);';
-    lbl.textContent=col.name||grp;
-    band.appendChild(lbl);
-    // Axis line
-    const ax=document.createElement('div');
-    ax.className='band-axis';
-    ax.style.cssText='position:absolute;top:50%;left:0;width:'+tw+'px;height:2px;background:rgba(255,255,255,.18);transform:translateY(-50%);pointer-events:none;';
+    const c = col(grp);
+    const top = gi*BH;
+    const band = document.createElement('div');
+    band.className = 'band';
+    band.style.cssText = 'top:'+top+'px;width:'+W+'px;height:'+BH+'px;background:'+c.bg+'cc;border-bottom:1px solid rgba(255,255,255,.1);';
+
+    // axis line
+    const ax = document.createElement('div');
+    ax.className = 'baxis';
+    ax.style.cssText = 'width:'+W+'px;top:'+(BH/2)+'px;';
     band.appendChild(ax);
-    inner.appendChild(band);
+
+    // label
+    const lb = document.createElement('div');
+    lb.className = 'blabel';
+    lb.textContent = c.name || grp;
+    lb.style.right = '8px';
+    band.appendChild(lb);
+
+    inn.appendChild(band);
   });
-  
-  // Place events - track used x positions per band to stagger
-  const grpPosMap={};
-  EVENTS.forEach((e,idx)=>{
-    if(!e.hl||!e.y)return;
-    const grp=e.grp||'';
-    const gi=GORDER.indexOf(grp);
-    const bandTop=gi>=0?gi*BAND_H:0;
-    const col=gc(grp);
-    const x=xOf(e.y,e.mo,e.d);
-    const cardW=170,cardH=e.img?135:80;
-    
-    // Stagger: use multiple slots
-    if(!grpPosMap[grp])grpPosMap[grp]=[];
-    const slots=grpPosMap[grp];
-    // Find a slot (y offset) that doesn't collide at this x
-    const numSlots=4;
-    const slotHeights=[8,BAND_H/4,BAND_H/2-cardH-4,BAND_H-cardH-8];
-    let chosenSlot=0;
-    for(let s=0;s<numSlots;s++){
-      let ok=true;
-      for(const placed of slots){
-        if(Math.abs(placed.x-x)<cardW+8&&placed.slot===s){ok=false;break;}
-      }
-      if(ok){chosenSlot=s;break;}
+
+  // Year ticks
+  for(let y=MIN_Y; y<=MAX_Y; y++){
+    const xp = x(y);
+    const mk = document.createElement('div');
+    mk.className = 'ymark';
+    mk.style.cssText = 'left:'+xp+'px;height:'+H+'px;';
+    mk.innerHTML = '<div class="ytick" style="height:'+(H-20)+'px;width:1px;"></div>'
+      + '<div class="ylabel">'+y+'</div>';
+    inn.appendChild(mk);
+  }
+
+  // Events
+  const placed = {}; // grp -> [{x,slot}]
+  EVENTS.forEach(ev => {
+    if(!ev.hl || !ev.y) return;
+    const gi = GORDER.indexOf(ev.grp||'');
+    const bTop = gi>=0 ? gi*BH : (GORDER.length-1)*BH;
+    const c = col(ev.grp);
+    const cx = x(ev.y, ev.mo, ev.d);
+    const cw = 158, ch = ev.img ? 125 : 72;
+
+    if(!placed[ev.grp]) placed[ev.grp]=[];
+    const used = placed[ev.grp];
+    // 4 vertical slots per band
+    const slots = [6, Math.round(BH*0.28), Math.round(BH*0.55), BH-ch-6];
+    let slot = 0;
+    for(let s=0; s<slots.length; s++){
+      const ok = used.every(u => Math.abs(u.x-cx) > cw+6 || u.slot!==s);
+      if(ok){ slot=s; break; }
     }
-    slots.push({x,slot:chosenSlot});
-    
-    const topOff=slotHeights[chosenSlot];
-    const isTailUp=topOff<BAND_H/2;
-    
-    const card=document.createElement('div');
-    card.className='ecard '+(isTailUp?'tail-up':'tail-down');
-    card.dataset.grp=grp;
-    card.dataset.hl=e.hl;
-    card.style.cssText='left:'+(x-cardW/2)+'px;top:'+(bandTop+topOff)+'px;border-top:3px solid '+col.bg+';background:'+(col.card||'#fff')+';width:'+cardW+'px;';
-    const dateStr=e.dd||(e.y+(e.mo?'/'+e.mo:'')+(e.d?'/'+e.d:''));
-    card.innerHTML='<div class="ecard-date">'+dateStr+'</div><div class="ecard-title">'+e.hl+'</div>'+(e.img?'<img class="ecard-img" src="'+e.img+'" alt="" onerror="this.remove()">':'');
-    card.addEventListener('click',()=>openModal(e,col));
-    inner.appendChild(card);
+    used.push({x:cx,slot});
+
+    const top = bTop + slots[slot];
+    const isTailUp = slots[slot] < BH/2;
+    const card = document.createElement('div');
+    card.className = 'ev ' + (isTailUp?'tu':'td');
+    card.dataset.g = ev.grp||'';
+    card.dataset.h = ev.hl;
+    card.style.cssText = 'left:'+(cx-cw/2)+'px;top:'+top+'px;width:'+cw+'px;'
+      +'border-top:3px solid '+c.bg+';background:'+(c.card||'#fff')+';';
+    const dt = ev.dd||(ev.y+(ev.mo?'/'+ev.mo:'')+(ev.d?'/'+ev.d:''));
+    card.innerHTML = '<div class="ev-d">'+dt+'</div><div class="ev-t">'+ev.hl+'</div>'
+      +(ev.img?'<img class="ev-img" src="'+ev.img+'" alt="" onerror="this.remove()">':'');
+    card.addEventListener('click',()=>openM(ev,c));
+    inn.appendChild(card);
   });
-  
-  applyFilter();
-  buildMinimap();
+
+  filter();
+  drawMM();
 }
 
-function applyFilter(){
-  searchQ=document.getElementById('search').value.toLowerCase();
+function filter(){
+  sq = document.getElementById('search').value.toLowerCase();
   let n=0;
-  document.querySelectorAll('.ecard').forEach(c=>{
-    const gm=activeGrp==='all'||c.dataset.grp===activeGrp;
-    const sm=!searchQ||(c.dataset.hl||'').toLowerCase().includes(searchQ);
-    c.classList.toggle('hidden',!(gm&&sm));
-    if(gm&&sm)n++;
+  document.querySelectorAll('.ev').forEach(c=>{
+    const gm = activeG==='all' || c.dataset.g===activeG;
+    const sm = !sq || (c.dataset.h||'').toLowerCase().includes(sq);
+    c.classList.toggle('hide', !(gm&&sm));
+    if(gm&&sm) n++;
   });
-  document.getElementById('counter').textContent=n+' אירועים';
+  document.getElementById('cnt').textContent = n+' אירועים';
 }
 
-function setGrp(grp,btn){
-  activeGrp=grp;
-  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  applyFilter();
+function setG(g, btn){
+  activeG = g;
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  filter();
 }
 
-function buildFilterBtns(){
-  const bar=document.getElementById('filterbar');
-  const grps=[...new Set(EVENTS.map(e=>e.grp).filter(Boolean))];
-  grps.forEach(grp=>{
-    const col=gc(grp);
-    const btn=document.createElement('button');
-    btn.className='fbtn active';
-    btn.dataset.grp=grp;
-    btn.style.cssText='background:'+col.bg+';color:#fff;';
-    btn.textContent=col.name||grp.slice(0,18);
-    btn.onclick=()=>setGrp(grp,btn);
+function buildFBtns(){
+  const bar = document.getElementById('fbar');
+  [...new Set(EVENTS.map(e=>e.grp).filter(Boolean))].forEach(grp=>{
+    const c = col(grp);
+    const btn = document.createElement('button');
+    btn.className = 'fb on';
+    btn.dataset.g = grp;
+    btn.style.background = c.bg;
+    btn.textContent = c.name||grp.slice(0,16);
+    btn.onclick = ()=>setG(grp,btn);
     bar.appendChild(btn);
   });
 }
 
-function zoom(delta){
-  PPY=Math.max(50,Math.min(600,PPY*(1+delta)));
-  buildBands();
+function chZoom(d){
+  PPY = Math.max(50, Math.min(500, PPY*(1+d)));
+  render();
 }
 
-function openModal(e,col){
-  document.getElementById('modal-hdr').style.background=col.bg||'#555';
-  document.getElementById('modal-date').textContent=e.dd||(e.y+(e.mo?'/'+e.mo:'')+(e.d?'/'+e.d:''));
-  document.getElementById('modal-title').textContent=e.hl;
-  const img=document.getElementById('modal-img');
-  if(e.img){img.src=e.img;img.style.display='block';}else{img.style.display='none';}
-  document.getElementById('modal-cap').textContent=e.cap||'';
-  document.getElementById('modal-text').textContent=e.tx||'';
-  const grpEl=document.getElementById('modal-grp');
-  grpEl.textContent=col.name||e.grp||'';
-  grpEl.style.background=col.bg||'#555';
-  document.getElementById('modal').classList.add('open');
+function openM(ev, c){
+  document.getElementById('mhdr').style.background = c.bg;
+  document.getElementById('mdate').textContent = ev.dd||(ev.y+(ev.mo?'/'+ev.mo:'')+(ev.d?'/'+ev.d:''));
+  document.getElementById('mtitle').textContent = ev.hl;
+  const img = document.getElementById('mimg');
+  img.src = ev.img||''; img.style.display = ev.img?'block':'none';
+  document.getElementById('mcap').textContent = ev.cap||'';
+  document.getElementById('mtext').textContent = ev.tx||'';
+  const tag = document.getElementById('mtag');
+  tag.textContent = c.name||ev.grp||'';
+  tag.style.background = c.bg;
+  document.getElementById('modal').classList.add('on');
 }
-function closeModal(){document.getElementById('modal').classList.remove('open');}
+function closeM(){ document.getElementById('modal').classList.remove('on'); }
+document.getElementById('modal').addEventListener('click', e=>{
+  if(e.target===document.getElementById('modal')) closeM();
+});
 
-function buildMinimap(){
-  const canvas=document.getElementById('minimap-canvas');
-  const tw=totalW();
-  const mmH=60;
-  canvas.width=canvas.offsetWidth||window.innerWidth;
-  canvas.height=mmH;
-  const ctx=canvas.getContext('2d');
-  const scale=canvas.width/tw;
-  ctx.clearRect(0,0,canvas.width,mmH);
-  // Draw group bands
+function drawMM(){
+  const cv = document.getElementById('mmc');
+  const W = cv.clientWidth || window.innerWidth;
+  cv.width = W; cv.height = 42;
+  const ctx = cv.getContext('2d');
+  const scale = W / tw();
   GORDER.forEach((grp,gi)=>{
-    const col=gc(grp);
-    ctx.fillStyle=col.bg+'88';
-    const bh=mmH/GORDER.length;
-    ctx.fillRect(0,gi*bh,canvas.width,bh);
+    const c = col(grp);
+    ctx.fillStyle = c.bg+'99';
+    const bh = 42/GORDER.length;
+    ctx.fillRect(0, gi*bh, W, bh);
   });
-  // Draw events
-  EVENTS.forEach(e=>{
-    if(!e.y)return;
-    const gi=GORDER.indexOf(e.grp||'');
-    const col=gc(e.grp);
-    const x=xOf(e.y,e.mo,e.d)*scale;
-    const bh=mmH/GORDER.length;
-    const y=gi>=0?(gi*bh+bh/2):mmH/2;
-    ctx.fillStyle=col.bg||'#888';
-    ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fill();
+  EVENTS.forEach(ev=>{
+    if(!ev.y) return;
+    const gi = GORDER.indexOf(ev.grp||'');
+    const c = col(ev.grp);
+    const px = x(ev.y,ev.mo,ev.d)*scale;
+    const bh = 42/GORDER.length;
+    const py = gi>=0 ? gi*bh+bh/2 : 21;
+    ctx.fillStyle = c.bg;
+    ctx.beginPath(); ctx.arc(px,py,2.2,0,Math.PI*2); ctx.fill();
   });
   // Year labels
-  const yrDiv=document.getElementById('minimap-yrs');
+  const yrDiv = document.getElementById('mm-years');
   yrDiv.innerHTML='';
   [1760,1770,1780,1790,1800,1810].forEach(y=>{
-    const span=document.createElement('span');
-    span.className='minimap-yr';
-    span.textContent=y;
-    yrDiv.appendChild(span);
+    yrDiv.innerHTML += '<span>'+y+'</span>';
   });
-  // Sync viewport indicator
-  updateMinimapViewport();
+  syncVP();
 }
 
-function updateMinimapViewport(){
-  const wrap=document.getElementById('tl-wrap');
-  const canvas=document.getElementById('minimap-canvas');
-  const tw=totalW();
-  const scale=canvas.offsetWidth/tw;
-  const vp=document.getElementById('minimap-viewport');
-  const vl=wrap.scrollLeft*scale;
-  const vw=wrap.clientWidth*scale;
-  vp.style.left=vl+'px';
-  vp.style.width=vw+'px';
+function syncVP(){
+  const tl = document.getElementById('tl');
+  const cv = document.getElementById('mmc');
+  const W = cv.clientWidth || window.innerWidth;
+  const scale = W / tw();
+  const vp = document.getElementById('mm-vp');
+  vp.style.left = (tl.scrollLeft*scale)+'px';
+  vp.style.width = (tl.clientWidth*scale)+'px';
 }
 
 // Drag scroll
 let drag=false,sx=0,sy=0,sl=0,st=0;
-const wrap=document.getElementById('tl-wrap');
-wrap.addEventListener('mousedown',e=>{drag=true;sx=e.clientX;sy=e.clientY;sl=wrap.scrollLeft;st=wrap.scrollTop;});
-document.addEventListener('mouseup',()=>drag=false);
-document.addEventListener('mousemove',e=>{if(!drag)return;e.preventDefault();wrap.scrollLeft=sl-(e.clientX-sx);wrap.scrollTop=st-(e.clientY-sy);updateMinimapViewport();});
-wrap.addEventListener('scroll',updateMinimapViewport);
+const tl = document.getElementById('tl');
+tl.addEventListener('mousedown', e=>{drag=true;sx=e.clientX;sy=e.clientY;sl=tl.scrollLeft;st=tl.scrollTop;});
+document.addEventListener('mouseup', ()=>drag=false);
+document.addEventListener('mousemove', e=>{
+  if(!drag) return;
+  e.preventDefault();
+  tl.scrollLeft = sl-(e.clientX-sx);
+  tl.scrollTop = st-(e.clientY-sy);
+  syncVP();
+});
+tl.addEventListener('scroll', syncVP);
 
-// Minimap click to jump
-document.getElementById('minimap-canvas').addEventListener('click',e=>{
-  const canvas=document.getElementById('minimap-canvas');
-  const tw=totalW();
-  const scale=tw/canvas.offsetWidth;
-  const targetX=e.offsetX*scale;
-  wrap.scrollLeft=targetX-wrap.clientWidth/2;
-  updateMinimapViewport();
+// Minimap click
+document.getElementById('mmc').addEventListener('click', e=>{
+  const scale = tw() / (e.target.clientWidth||window.innerWidth);
+  tl.scrollLeft = e.offsetX*scale - tl.clientWidth/2;
+  syncVP();
 });
 
-// Wheel zoom
-wrap.addEventListener('wheel',e=>{if(e.ctrlKey){e.preventDefault();zoom(e.deltaY>0?-0.15:0.15);}},{passive:false});
+// Ctrl+wheel zoom
+tl.addEventListener('wheel', e=>{
+  if(e.ctrlKey){ e.preventDefault(); chZoom(e.deltaY>0?-0.15:0.15); }
+},{passive:false});
 
-// Modal close
-document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
-
-buildFilterBtns();
-buildBands();
-window.addEventListener('resize',()=>{buildBands();});
+buildFBtns();
+render();
+window.addEventListener('resize', render);
 </script>
-</body>
-</html>
+</body></html>
