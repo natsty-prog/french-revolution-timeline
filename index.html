@@ -22,7 +22,7 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#0d1117;color:#ff
 #counter{font-size:.72em;opacity:.65;white-space:nowrap;}
 
 /* ── Filter bar ── */
-#filterbar{height:var(--filterbar-h);background:rgba(0,0,0,.5);border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;padding:0 12px;gap:6px;overflow-x:auto;flex-shrink:0;}
+#filterbar{height:var(--filterbar-h);background:rgba(0,0,0,.5);border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;padding:0 12px;gap:6px;overflow-x:auto;flex-shrink:0;direction:ltr;}
 #filterbar::-webkit-scrollbar{display:none;}
 .fbtn{padding:3px 12px;border-radius:12px;border:2px solid transparent;cursor:pointer;font-size:.72em;font-weight:600;transition:all .15s;white-space:nowrap;opacity:.55;}
 .fbtn.active{opacity:1;border-color:rgba(255,255,255,.4);}
@@ -143,8 +143,8 @@ function gc(grp){
   for(const k in GC){if(grp.startsWith(k.slice(0,8))||k.startsWith(grp.slice(0,8)))return GC[k];}
   return{bg:'#555',card:'#eee',name:grp.slice(0,15)};
 }
-function xOf(y,mo=0,d=0){return(y-MIN_Y+(mo?((mo-1)/12):0)+(d?(d-1)/365:0))*PPY+60;}
-function totalW(){return(MAX_Y-MIN_Y)*PPY+120;}
+function xOf(y,mo=0,d=0){return(y-MIN_Y+(mo?((mo-1)/12):0)+(d?(d-1)/365:0))*PPY+220;}
+function totalW(){return(MAX_Y-MIN_Y)*PPY+440;}
 const BAND_H=190,PAD_TOP=20;
 
 function buildBands(){
