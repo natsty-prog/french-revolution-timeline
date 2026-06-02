@@ -8,23 +8,25 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#f7f4ef;color:#222;overflow:hidden}
 #hdr{position:fixed;top:0;left:0;right:0;height:54px;z-index:200;
-  background:#ffffff;border-bottom:2px solid #e0d8cc;
+  background:#002395;
+  border-bottom:4px solid #ED2939;
   display:flex;align-items:center;padding:0 14px;gap:10px;
-  box-shadow:0 2px 8px rgba(0,0,0,.08)}
-#hdr h1{font-size:1.1em;white-space:nowrap;color:#222}
-#hdr small{color:#888;font-size:.75em}
+  box-shadow:0 2px 10px rgba(0,0,0,.22)}
+#hdr h1{font-size:1.1em;white-space:nowrap;color:#fff}
+#hdr small{color:rgba(255,255,255,.75);font-size:.75em}
 #hdr-r{display:flex;gap:7px;align-items:center;margin-right:auto}
-#search{background:#f0ece6;border:1px solid #d0c8be;border-radius:18px;
-  padding:4px 12px;color:#222;font-size:.8em;width:170px}
-#search:focus{outline:none;background:#e8e2d8;border-color:#b0a898}
-#search::placeholder{color:#aaa}
-.zbtn{background:#f0ece6;border:1px solid #d0c8be;color:#444;
+#search{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);border-radius:18px;
+  padding:4px 12px;color:#fff;font-size:.8em;width:170px}
+#search:focus{outline:none;background:rgba(255,255,255,.25);border-color:#fff}
+#search::placeholder{color:rgba(255,255,255,.5)}
+.zbtn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:#fff;
   width:26px;height:26px;border-radius:4px;cursor:pointer;font-size:1em;
   display:flex;align-items:center;justify-content:center}
-.zbtn:hover{background:#e4ddd3}
-#cnt{font-size:.72em;color:#888;white-space:nowrap}
+.zbtn:hover{background:rgba(255,255,255,.3)}
+#cnt{font-size:.72em;color:rgba(255,255,255,.75);white-space:nowrap}
 #fbar{position:fixed;top:54px;left:0;right:0;height:38px;z-index:200;
-  background:#f0ece6;border-bottom:1px solid #d8d0c4;
+  background:#f8f6f2;border-bottom:1px solid #ddd;
+  border-top:3px solid #ED2939;
   display:flex;align-items:center;padding:0 10px;gap:5px;
   overflow-x:auto;direction:ltr}
 #fbar::-webkit-scrollbar{height:0}
@@ -82,7 +84,7 @@ body{font-family:Arial,sans-serif;background:#f7f4ef;color:#222;overflow:hidden}
 
 /* Minimap */
 #mm{position:fixed;bottom:0;left:0;right:0;height:58px;z-index:200;
-  background:#f0ece6;border-top:1px solid #d8d0c4}
+  background:#f8f6f2;border-top:3px solid #002395}
 #mm canvas{display:block;width:100%;height:42px}
 #mm-years{display:flex;justify-content:space-between;padding:1px 8px;color:#999;font-size:.6em}
 #mm-vp{position:absolute;top:0;height:42px;
@@ -112,7 +114,7 @@ body{font-family:Arial,sans-serif;background:#f7f4ef;color:#222;overflow:hidden}
   display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
 #loading p{color:#888;font-size:.9em}
 .spinner{width:36px;height:36px;border:3px solid #e0d8cc;
-  border-top-color:#7B8FD8;border-radius:50%;animation:spin .7s linear infinite}
+  border-top-color:#002395;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
@@ -168,15 +170,15 @@ var MIN_Y=1756,MAX_Y=1816,BH=210,LP=220;
 
 /* ── Era colors (key = events.json grp field) ── */
 var GC={};
-GC['1756-1787 – תהליכים ארוכי טווח']='#7B8FD8';
-GC['1787  עד מאי 1789 ערב המהפכה']='#D4A020';
-GC['אביב 1789 עד ספטמבר 1791 – השנתיים הראשונות של המהפכה']='#3AAE72';
-GC['האספה המחוקקת עד הכרזת הרפובליקה - 1.10.1791 עד ה-22.9.1792']='#2E96CC';
-GC['הקונבנט']='#18B4A0';
-GC['שלטון\nהטרור']='#D64040';
-GC['הדירקטוריון']='#9B6FCC';
-GC['הקונסולט']='#E08C20';
-GC['הקיסרות']='#6888A0';
+GC['1756-1787 – תהליכים ארוכי טווח']='#002395';
+GC['1787  עד מאי 1789 ערב המהפכה']='#1A4BAA';
+GC['אביב 1789 עד ספטמבר 1791 – השנתיים הראשונות של המהפכה']='#3A7FCC';
+GC['האספה המחוקקת עד הכרזת הרפובליקה - 1.10.1791 עד ה-22.9.1792']='#6699CC';
+GC['הקונבנט']='#CC2030';
+GC['שלטון\nהטרור']='#AA0015';
+GC['הדירקטוריון']='#CC4455';
+GC['הקונסולט']='#7744BB';
+GC['הקיסרות']='#003090';
 var GORDER=Object.keys(GC);
 
 /* ── Display labels ── */
