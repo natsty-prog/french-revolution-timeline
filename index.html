@@ -30,11 +30,12 @@ body{font-family:Arial,sans-serif;background:#f7f4ef;color:#222;overflow:hidden}
   display:flex;align-items:center;padding:0 10px;gap:5px;
   overflow-x:auto;direction:ltr}
 #fbar::-webkit-scrollbar{height:0}
-.fb{padding:3px 11px;border-radius:11px;border:none;cursor:pointer;
+.fb{padding:3px 11px;border-radius:11px;border:1px solid rgba(0,0,0,.15);cursor:pointer;
   font-size:.7em;font-weight:700;color:#fff;
-  opacity:.6;transition:opacity .15s,transform .1s;white-space:nowrap}
+  opacity:.65;transition:opacity .15s,transform .1s;white-space:nowrap}
+.fb[style*="#DDDDDD"]{color:#222!important}
 .fb.on{opacity:1;transform:scale(1.05);box-shadow:0 2px 6px rgba(0,0,0,.2)}
-.fb:hover{opacity:.88}
+.fb:hover{opacity:.9}
 #tl{position:fixed;top:92px;bottom:58px;left:0;right:0;overflow:auto;background:#f7f4ef}
 #tl::-webkit-scrollbar{width:6px;height:6px;background:#ede8e0}
 #tl::-webkit-scrollbar-thumb{background:#c8bfb0;border-radius:3px}
@@ -171,14 +172,14 @@ var MIN_Y=1756,MAX_Y=1816,BH=210,LP=220;
 /* ── Era colors (key = events.json grp field) ── */
 var GC={};
 GC['1756-1787 – תהליכים ארוכי טווח']='#002395';
-GC['1787  עד מאי 1789 ערב המהפכה']='#1A4BAA';
-GC['אביב 1789 עד ספטמבר 1791 – השנתיים הראשונות של המהפכה']='#3A7FCC';
-GC['האספה המחוקקת עד הכרזת הרפובליקה - 1.10.1791 עד ה-22.9.1792']='#6699CC';
-GC['הקונבנט']='#CC2030';
-GC['שלטון\nהטרור']='#AA0015';
-GC['הדירקטוריון']='#CC4455';
-GC['הקונסולט']='#7744BB';
-GC['הקיסרות']='#003090';
+GC['1787  עד מאי 1789 ערב המהפכה']='#ED2939';
+GC['אביב 1789 עד ספטמבר 1791 – השנתיים הראשונות של המהפכה']='#DDDDDD';
+GC['האספה המחוקקת עד הכרזת הרפובליקה - 1.10.1791 עד ה-22.9.1792']='#002395';
+GC['הקונבנט']='#ED2939';
+GC['שלטון\nהטרור']='#DDDDDD';
+GC['הדירקטוריון']='#002395';
+GC['הקונסולט']='#ED2939';
+GC['הקיסרות']='#DDDDDD';
 var GORDER=Object.keys(GC);
 
 /* ── Display labels ── */
@@ -397,7 +398,9 @@ function buildFBtns(){
   fbar.appendChild(allBtn);
   GORDER.forEach(function(g){
     var btn=document.createElement('button');btn.className='fb';btn.dataset.g=g;
-    btn.onclick=function(){setG(this.dataset.g,this);};btn.style.background=GC[g];
+    btn.onclick=function(){setG(this.dataset.g,this);};
+    btn.style.background=GC[g];
+    if(GC[g]==='#DDDDDD'){btn.style.color='#222';btn.style.borderColor='#aaa';}
     btn.textContent=(GLABEL[g]||g.replace('\n',' ')).substring(0,30);fbar.appendChild(btn);
   });
 }
