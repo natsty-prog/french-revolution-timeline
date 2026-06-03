@@ -88,15 +88,17 @@ body{font-family:Arial,sans-serif;background:#F6F1E8;color:#1F2A36;overflow:hidd
 
 /* ── Minimap ── */
 #mm{position:fixed;bottom:0;left:0;right:0;height:58px;z-index:200;
-  background:#6E7A88;border-top:3px solid #17324D}
-#mm canvas{display:block;width:100%;height:42px}
+  background:#6E7A88;border-top:3px solid #17324D;
+  position:fixed;overflow:hidden}
+#mm-inner{position:relative;width:100%;height:42px}
+#mm canvas{display:block;width:100%;height:42px;position:absolute;top:0;left:0}
 #mm-years{display:flex;justify-content:space-between;padding:1px 8px;
   color:#F5F7FA;font-size:.6em;opacity:.8}
 #mm-vp{position:absolute;top:0;height:42px;
-  background:rgba(255,255,255,.12);
+  background:rgba(255,255,255,.15);
   border:2px solid #FFFFFF;
-  outline:1px solid #B8C1CC;
-  pointer-events:none}
+  box-shadow:0 0 0 1px #B8C1CC;
+  pointer-events:none;z-index:10}
 
 /* ── Modal ── */
 #modal{display:none;position:fixed;inset:0;background:rgba(23,50,77,.6);z-index:999;
@@ -151,9 +153,11 @@ body{font-family:Arial,sans-serif;background:#F6F1E8;color:#1F2A36;overflow:hidd
 <div id="tl"><div id="tl-in"></div></div>
 
 <div id="mm">
-  <canvas id="mmc"></canvas>
+  <div id="mm-inner">
+    <canvas id="mmc"></canvas>
+    <div id="mm-vp"></div>
+  </div>
   <div id="mm-years"></div>
-  <div id="mm-vp"></div>
 </div>
 
 <div id="modal">
@@ -348,11 +352,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')window.close
 
 function drawMM(){
   var tl=document.getElementById('tl');
+  var mmInner=document.getElementById('mm-inner');
   var cvs=document.getElementById('mmc');
-  var W=cvs.offsetWidth||window.innerWidth,H=42;
+  var W=mmInner.offsetWidth||window.innerWidth,H=42;
   cvs.width=W;cvs.height=H;
   var ctx=cvs.getContext('2d');
-  /* Minimap background: #6E7A88 */
   ctx.fillStyle='#6E7A88';ctx.fillRect(0,0,W,H);
   var totalw=TW(),bh=H/GORDER.length;
   GORDER.forEach(function(g,gi){
@@ -372,7 +376,10 @@ function drawMM(){
   });
   var sx=tl.scrollLeft,vw=tl.clientWidth;
   var vp=document.getElementById('mm-vp');
-  vp.style.left=((sx/totalw)*W)+'px';vp.style.width=((vw/totalw)*W)+'px';
+  var vpLeft=Math.round((sx/totalw)*W);
+  var vpWidth=Math.max(10,Math.round((vw/totalw)*W));
+  vp.style.left=vpLeft+'px';
+  vp.style.width=vpWidth+'px';
   var yDiv=document.getElementById('mm-years');
   if(!yDiv.children.length){for(var yr=MIN_Y;yr<=MAX_Y;yr+=5){var sp=document.createElement('span');sp.textContent=yr;yDiv.appendChild(sp);}}
 }
@@ -382,7 +389,7 @@ document.getElementById('mmc').addEventListener('click',function(e){
   var tl=document.getElementById('tl');tl.scrollLeft=ratio*TW()-tl.clientWidth/2;drawMM();
 });
 document.getElementById('tl').addEventListener('scroll',drawMM);
-window.addEventListener('resize',function(){render();});
+window.addEventListener('resize',function(){render();drawMM();});
 
 function buildFBtns(){
   var fbar=document.getElementById('fbar');fbar.innerHTML='';
