@@ -54,16 +54,17 @@ body{font-family:Arial,sans-serif;background:#F6F1E8;color:#1F2A36;overflow:hidd
 
 /* ── Era bands (3-layer soft colors) ── */
 .band{position:absolute;left:0;z-index:2}
+/* Labels are pinned to viewport left via JS — initial left:8px, updated on scroll */
 .blabel{position:absolute;top:50%;transform:translateY(-50%);
-  right:7px;z-index:6;
+  left:8px;z-index:6;
   display:flex;align-items:center;gap:6px;
-  background:rgba(255,255,255,.85);
-  padding:4px 10px;border-radius:20px;
+  background:rgba(255,255,255,.88);
+  padding:5px 11px;border-radius:20px;
   border:1px solid #D8D1C6;
-  box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.blabel-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.blabel-name{font-size:.72em;font-weight:700;color:#1F2A36;white-space:nowrap}
-.blabel-dates{font-size:.58em;color:#5B6470;white-space:nowrap;margin-right:4px}
+  box-shadow:0 1px 6px rgba(0,0,0,.12)}
+.blabel-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.blabel-name{font-size:.73em;font-weight:700;white-space:nowrap}
+.blabel-dates{font-size:.58em;color:#5B6470;white-space:nowrap;margin-right:2px}
 .baxis{position:absolute;top:50%;left:0;height:1px;background:rgba(0,0,0,.1);z-index:3}
 
 /* ── Year ticks ── */
@@ -435,12 +436,20 @@ function drawMM(){
   if(!yDiv&&false){}// no separate years div now
 }
 
+/* Keep band labels pinned to viewport left edge */
+function stickyLabels(){
+  var sx=document.getElementById('tl').scrollLeft;
+  document.querySelectorAll('.blabel').forEach(function(lbl){
+    lbl.style.left=(sx+10)+'px';
+  });
+}
+
 document.getElementById('mmc').addEventListener('click',function(e){
   var rect=this.getBoundingClientRect(),ratio=(e.clientX-rect.left)/rect.width;
   var tl=document.getElementById('tl');
-  tl.scrollLeft=ratio*TW()-tl.clientWidth/2;drawMM();
+  tl.scrollLeft=ratio*TW()-tl.clientWidth/2;drawMM();stickyLabels();
 });
-document.getElementById('tl').addEventListener('scroll',drawMM);
+document.getElementById('tl').addEventListener('scroll',function(){drawMM();stickyLabels();});
 window.addEventListener('resize',function(){render();drawMM();});
 
 function buildFBtns(){
@@ -466,7 +475,10 @@ fetch('events.json')
     document.getElementById('loading').style.display='none';
     buildFBtns();render();
     var tl=document.getElementById('tl');
-    setTimeout(function(){tl.scrollLeft=Math.max(0,xP(1789)-tl.clientWidth*0.3);drawMM();},80);
+    setTimeout(function(){
+      tl.scrollLeft=Math.max(0,xP(1789)-tl.clientWidth*0.3);
+      drawMM();stickyLabels();
+    },80);
   })
   .catch(function(err){
     document.getElementById('load-msg').textContent='שגיאה: '+err.message;
